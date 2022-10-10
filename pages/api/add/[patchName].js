@@ -1,15 +1,8 @@
 import User from "../../../models/users"
-const mongoose = require("mongoose")
+import connectDB from "../../../utils/db"
 
-const dbURL = `mongodb+srv://memorygame:${process.env.NEXT_DB_PASSWORD}@memorygame.anasoea.mongodb.net/?retryWrites=true&w=majority`
-mongoose
-  .connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    console.log("Connected to DB")
-  })
-  .catch((err) => {
-    console.log(err)
-  })
+connectDB()
+
 export default function handler(req, res) {
   const { patchName } = req.query
   const { score } = req.body
