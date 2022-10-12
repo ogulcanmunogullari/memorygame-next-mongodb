@@ -10,11 +10,11 @@
 
 - [x] Next
 - [x] MongoDB
-- [ ] TailwindCSS
+- [x] TailwindCSS
 
 ### Dev Notes
 
 - [x] Add a database
-- [ ] Add a login system
+- [x] Add a login/register system
 - [ ] Add a game system
 - [ ] Add a ranking system
