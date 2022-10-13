@@ -1,29 +1,32 @@
 import React, { useEffect } from "react"
-import { useRouter } from "next/router"
 
-function Game() {
-  const [user, setUser] = React.useState({})
-  const router = useRouter()
-  const { username } = router.query
-
+function Game({ user }) {
+  const [userInfo, setUserInfo] = React.useState("")
+  console.log(user)
   useEffect(() => {
-    const getUser = async () => {
-      if (username) {
-        const res = await fetch("http://localhost:3000/api/find", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ username }),
-        })
-        const data = await res.json()
-        setUser(data.message)
-      }
-    }
-    getUser()
-  }, [username])
+    setUserInfo(user)
+  }, [user])
 
-  return <div>{JSON.stringify(user)}</div>
+  return <div>{userInfo?.name}</div>
 }
 
 export default Game
+
+export const getServerSideProps = async (context) => {
+  const { username } = context.query
+  const res = await fetch("http://localhost:3000/api/find", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username }),
+  })
+  const data = await res.json()
+  const user = await data.message
+
+  return {
+    props: {
+      user,
+    },
+  }
+}

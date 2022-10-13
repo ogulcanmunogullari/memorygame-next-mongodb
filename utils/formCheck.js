@@ -1,6 +1,8 @@
 import Router from "next/router"
+
 export const formCheck = ({ e, username, password }) => {
   e.preventDefault()
+
   fetch("/api/check", {
     method: "POST",
     headers: {
@@ -35,6 +37,7 @@ export const register = ({ username, password }) => {
   }).then((res) => {
     if (res.status === 200) {
       alert("Registration successful!")
+
       Router.push(`/${username}`)
     } else if (res.status === 400) {
       alert("Registration failed!")

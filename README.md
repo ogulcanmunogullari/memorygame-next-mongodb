@@ -16,5 +16,6 @@
 
 - [x] Add a database
 - [x] Add a login/register system
+- [x] Add an Encryption for the passwords
 - [ ] Add a game system
 - [ ] Add a ranking system

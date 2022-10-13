@@ -1,13 +1,16 @@
 import User from "../../../models/users"
 import connectDB from "../../../utils/db"
+import bcrypt from "bcrypt"
 
 connectDB()
-export default function handler(req, res) {
+export default async function handler(req, res) {
   const { name, password, score } = req.body
+  const salt = bcrypt.genSaltSync(10)
+  const hashedPassword = bcrypt.hashSync(password, salt)
   try {
     const user = new User({
       name,
-      password,
+      password: hashedPassword,
       score,
     })
     user.save()
