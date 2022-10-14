@@ -10,6 +10,7 @@
 
 - [x] Next
 - [x] MongoDB
+- [x] Bcrypt
 - [x] TailwindCSS
 
 ### Dev Notes
@@ -17,5 +18,6 @@
 - [x] Add a database
 - [x] Add a login/register system
 - [x] Add an Encryption for the passwords
+- [x] Add login check / auto login and logout system
 - [ ] Add a game system
 - [ ] Add a ranking system

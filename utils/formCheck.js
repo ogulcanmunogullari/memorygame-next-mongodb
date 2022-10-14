@@ -15,6 +15,10 @@ export const formCheck = ({ e, username, password }) => {
   }).then((res) => {
     if (res.status === 200) {
       alert("Login successful!")
+      localStorage.setItem(
+        "check",
+        JSON.stringify({ username: username, login: "true" }),
+      )
       Router.push(`/${username}`)
     } else if (res.status === 400) {
       alert("Wrong password!")
@@ -37,7 +41,10 @@ export const register = ({ username, password }) => {
   }).then((res) => {
     if (res.status === 200) {
       alert("Registration successful!")
-
+      localStorage.setItem(
+        "check",
+        JSON.stringify({ username: username, login: "true" }),
+      )
       Router.push(`/${username}`)
     } else if (res.status === 400) {
       alert("Registration failed!")

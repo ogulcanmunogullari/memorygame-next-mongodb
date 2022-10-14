@@ -1,10 +1,21 @@
 import Head from "next/head"
 import { formCheck } from "../utils/formCheck"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/router"
 
 export default function Home() {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const router = useRouter()
+  useEffect(() => {
+    const check = localStorage.getItem("check")
+    if (check) {
+      const { username, login } = JSON.parse(check)
+      if (login === "true") {
+        router.push(`/${username}`)
+      }
+    }
+  }, [router])
 
   return (
     <div>
