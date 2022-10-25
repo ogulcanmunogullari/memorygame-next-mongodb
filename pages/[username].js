@@ -66,7 +66,7 @@ function Game({ user }) {
             },
           }),
         )
-      }, 500)
+      }, 1000)
       setScore((old) => old - 10)
       setOpened((old) => old - 2)
     } else if (doubles[0].actId === doubles[1].actId) {
