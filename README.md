@@ -21,4 +21,4 @@
 - [x] Add login check / auto login and logout system
 - [x] Add a game system
 - [x] Add a ranking system
-- [ ] Styling
+- [x] Styling

@@ -1,10 +1,14 @@
 import Image from "next/image"
 import { useRouter } from "next/router"
-import cardShuffle from "../utils/cardShuffle"
 import React, { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { useDispatch } from "react-redux"
 import { updateCard, cardsSelector, setAllCards } from "../redux/cardsSlicer"
+import cardShuffle from "../utils/cardShuffle"
+
+import Menu from "../components/Menu"
+import UserSection from "../components/UserSection"
+import Head from "next/head"
 
 function Game({ user }) {
   const data = useSelector(cardsSelector.selectAll)
@@ -29,14 +33,6 @@ function Game({ user }) {
     const check = localStorage.getItem("check")
     check ?? router.push("/")
   }, [router])
-
-  const logOut = () => {
-    localStorage.removeItem("check")
-    window.location.reload()
-  }
-  const reset = () => {
-    window.location.reload()
-  }
 
   const updateUserFunc = ({ name, score }) => {
     fetch("/api/update", {
@@ -110,14 +106,13 @@ function Game({ user }) {
 
   return (
     <div className="container mx-auto">
-      <div>{user?.name}</div>
-      <div>Your Higher Score - {user?.score}</div>
-      <div>{score}</div>
-      <button onClick={() => logOut()}>Logout</button>
-      <button onClick={() => reset()}>Reset</button>
-      <main className="md:w-1/2 mx-auto">
-        <h1>Game</h1>
-        <div className="grid grid-cols-4 sm:grid-cols-8 gap-2  mx-auto">
+      <Head>
+        <title>{user.name}&rsquo; Game</title>
+      </Head>
+      <Menu name={user.name} game={true} />
+      <UserSection userScore={user.score} score={score} />
+      <main className="sm:w-4/5 mx-auto sm:mt-10">
+        <div className="grid grid-cols-5 mx-2 sm:grid-cols-6 md:grid-cols-8 gap-2  sm:mx-auto">
           {cards?.map((item) => (
             <div key={Math.random()} className={`${item.show && "scale-110"}`}>
               <Image
