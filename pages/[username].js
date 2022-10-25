@@ -1,40 +1,30 @@
 import Image from "next/image"
 import { useRouter } from "next/router"
+import cardShuffle from "../utils/cardShuffle"
 import React, { useEffect, useState } from "react"
-
-const data = [
-  { id: 1, actId: "egg-1", show: false, actShow: false },
-  { id: 2, actId: "egg-1", show: false, actShow: false },
-  { id: 3, actId: "egg-2", show: false, actShow: false },
-  { id: 4, actId: "egg-2", show: false, actShow: false },
-  { id: 5, actId: "egg-3", show: false, actShow: false },
-  { id: 6, actId: "egg-3", show: false, actShow: false },
-  { id: 7, actId: "egg-4", show: false, actShow: false },
-  { id: 8, actId: "egg-4", show: false, actShow: false },
-  { id: 9, actId: "egg-5", show: false, actShow: false },
-  { id: 10, actId: "egg-5", show: false, actShow: false },
-  { id: 11, actId: "egg-6", show: false, actShow: false },
-  { id: 12, actId: "egg-6", show: false, actShow: false },
-  { id: 13, actId: "egg-7", show: false, actShow: false },
-  { id: 14, actId: "egg-7", show: false, actShow: false },
-  { id: 15, actId: "egg-8", show: false, actShow: false },
-  { id: 16, actId: "egg-8", show: false, actShow: false },
-  { id: 17, actId: "egg-9", show: false, actShow: false },
-  { id: 18, actId: "egg-9", show: false, actShow: false },
-  { id: 19, actId: "egg-10", show: false, actShow: false },
-  { id: 20, actId: "egg-10", show: false, actShow: false },
-  { id: 21, actId: "egg-11", show: false, actShow: false },
-  { id: 22, actId: "egg-11", show: false, actShow: false },
-  { id: 23, actId: "egg-12", show: false, actShow: false },
-  { id: 24, actId: "egg-12", show: false, actShow: false },
-]
+import { useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
+import { updateCard, cardsSelector, setAllCards } from "../redux/cardsSlicer"
 
 function Game({ user }) {
+  const data = useSelector(cardsSelector.selectAll)
   const router = useRouter()
-  const [cards, setCards] = useState(data)
+  const [cards, setCards] = useState()
   const [score, setScore] = useState(0)
-  const [memory, setMemory] = useState(0)
-  const [count, setCount] = useState(0)
+  const [doubles, setDoubles] = useState([])
+  const [opened, setOpened] = useState(0)
+
+  const dispatch = useDispatch()
+  const setData = () => {
+    dispatch(setAllCards(cardShuffle()))
+  }
+  useEffect(() => {
+    setData()
+  }, [])
+  useEffect(() => {
+    setCards(data)
+  }, [data])
+
   useEffect(() => {
     const check = localStorage.getItem("check")
     check ?? router.push("/")
@@ -44,59 +34,112 @@ function Game({ user }) {
     localStorage.removeItem("check")
     window.location.reload()
   }
-  const handleCard = (id, actId) => {
-    let newCards = [...cards]
-    newCards[id - 1].show = true
-    setCards(newCards)
-    if (count === 0) {
-      setMemory(id)
-      setCount(1)
-    } else {
-      if (memory === id) {
-        setCount(0)
-      } else {
-        if (newCards[memory - 1].actId === actId) {
-          newCards[memory - 1].actShow = true
-          newCards[id - 1].actShow = true
-          setScore((old) => old + 50)
-          setCount(0)
-        } else {
-          setTimeout(() => {
-            newCards[memory - 1].show = false
-            newCards[id - 1].show = false
-            setScore((old) => old - 10)
-            setCount(0)
-          }, 1000)
-        }
-      }
+  const reset = () => {
+    window.location.reload()
+  }
+
+  const updateUserFunc = ({ name, score }) => {
+    fetch("/api/update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name,
+        score: score,
+      }),
+    })
+  }
+
+  const checkDoubles = async () => {
+    if (doubles[0].actId !== doubles[1].actId) {
+      setTimeout(() => {
+        dispatch(
+          updateCard({
+            id: doubles[0].id,
+            changes: {
+              show: false,
+            },
+          }),
+        )
+        dispatch(
+          updateCard({
+            id: doubles[1].id,
+            changes: {
+              show: false,
+            },
+          }),
+        )
+      }, 500)
+      setScore((old) => old - 10)
+      setOpened((old) => old - 2)
+    } else if (doubles[0].actId === doubles[1].actId) {
+      setScore((old) => old + 50)
     }
+  }
+  useEffect(() => {
+    if (doubles.length === 2) {
+      checkDoubles()
+      setDoubles([])
+    }
+  }, [doubles])
+
+  const handleCard = (id, actId) => {
+    if (opened === 23) {
+      setData()
+      setOpened(0)
+      if (user.score >= score) {
+        router.push(`/score/${user.name}`)
+      } else {
+        updateUserFunc({ name: user.name, score })
+        router.push(`/score/${user.name}`)
+      }
+      return
+    }
+    dispatch(
+      updateCard({
+        id,
+        changes: {
+          show: true,
+        },
+      }),
+    )
+    setOpened((old) => old + 1)
+    setDoubles((old) => [...old, { id, actId }])
   }
 
   return (
     <div className="container mx-auto">
       <div>{user?.name}</div>
+      <div>Your Higher Score - {user?.score}</div>
       <div>{score}</div>
       <button onClick={() => logOut()}>Logout</button>
+      <button onClick={() => reset()}>Reset</button>
       <main className="md:w-1/2 mx-auto">
         <h1>Game</h1>
         <div className="grid grid-cols-4 sm:grid-cols-8 gap-2  mx-auto">
-          {cards.map((item) => (
-            <Image
-              key={Math.random()}
-              src={`${
-                item.actShow
-                  ? `/card-assets/${item.actId}.jpg`
-                  : `${
-                      item.show
-                        ? `/card-assets/${item.actId}.jpg`
-                        : "/card-assets/kapak.jpg"
-                    }`
-              }`}
-              width={200}
-              height={300}
-              alt={`card-${item.id}`}
-              onClick={() => handleCard(item.id, item.actId)}
-            />
+          {cards?.map((item) => (
+            <div key={Math.random()} className={`${item.show && "scale-110"}`}>
+              <Image
+                src={`${
+                  item.actShow
+                    ? `/card-assets/${item.actId}.jpg`
+                    : `${
+                        item.show
+                          ? `/card-assets/${item.actId}.jpg`
+                          : "/card-assets/kapak.jpg"
+                      }`
+                }`}
+                width={200}
+                height={300}
+                className={`${item.show && "scale-150"}`}
+                alt={`card-${item.id}`}
+                onClick={() =>
+                  (!item.show || !(doubles.length < 2)) &&
+                  handleCard(item.id, item.actId)
+                }
+              />
+            </div>
           ))}
         </div>
       </main>

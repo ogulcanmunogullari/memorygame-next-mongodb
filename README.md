@@ -19,5 +19,6 @@
 - [x] Add a login/register system
 - [x] Add an Encryption for the passwords
 - [x] Add login check / auto login and logout system
-- [ ] Add a game system
-- [ ] Add a ranking system
+- [x] Add a game system
+- [x] Add a ranking system
+- [ ] Styling
