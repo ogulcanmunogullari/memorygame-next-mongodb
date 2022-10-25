@@ -13,7 +13,7 @@ function Score({ user: ourUser }) {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const res = await fetch("http://localhost:3000/api/get")
+      const res = await fetch("https://online-memory-game.vercel.app/api/get")
       const data = await res.json()
       const sorted = await data.sort((small, big) => big.score - small.score)
       setAllUsers(sorted)
@@ -57,7 +57,7 @@ function Score({ user: ourUser }) {
 export default Score
 export const getServerSideProps = async (context) => {
   const { username } = context.query
-  const res = await fetch("http://localhost:3000/api/find", {
+  const res = await fetch("https://online-memory-game.vercel.app/api/find", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
