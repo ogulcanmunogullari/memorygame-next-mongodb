@@ -147,7 +147,7 @@ export default Game
 export const getServerSideProps = async (context) => {
   const { username } = context.query
   //http://localhost:3000
-  const res = await fetch("https://online-memory-game.vercel.app//api/find", {
+  const res = await fetch("https://online-memory-game.vercel.app/api/find", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
