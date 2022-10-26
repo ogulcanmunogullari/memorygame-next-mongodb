@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
-import React from "react"
+import React, { memo } from "react"
 
-function Menu({ game, name }) {
+const Menu = memo(function Menu({ game, name }) {
   const router = useRouter()
   const logOut = () => {
     localStorage.removeItem("check")
@@ -38,5 +38,5 @@ function Menu({ game, name }) {
       </button>
     </div>
   )
-}
-export default React.memo(Menu)
+})
+export default Menu
