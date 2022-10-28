@@ -7,6 +7,7 @@ import Link from "next/link"
 export default function Home() {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [lock, setLock] = useState(false)
   const usernameRef = useRef()
   const router = useRouter()
   useEffect(() => {
@@ -19,6 +20,15 @@ export default function Home() {
     }
     usernameRef.current.focus()
   }, [router])
+
+  const formHandle = async ({ e, username, password }) => {
+    const check = await formCheck({ e, username, password })
+    if (check) {
+      alert("Wrong password!")
+    } else {
+      setLock(true)
+    }
+  }
 
   return (
     <>
@@ -69,13 +79,13 @@ export default function Home() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button
-            disabled={!(password.length >= 6)}
+            disabled={!(password.length >= 6) || lock}
             className={`border p-2 my-5 w-full transition-all delay-200 ${
-              username && password.length >= 6
+              username && password.length >= 6 && !lock
                 ? "bg-green-600 text-white"
                 : "bg-red-600 text-white pointer-events-none select-none"
             }`}
-            onClick={(e) => formCheck({ e, username, password })}>
+            onClick={(e) => formHandle({ e, username, password })}>
             Register / Enter
           </button>
           <h1 className="text-xs text-gray-400 mt-2 pointer-events-none select-none">

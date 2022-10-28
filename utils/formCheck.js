@@ -1,9 +1,9 @@
 import Router from "next/router"
 
-export const formCheck = ({ e, username, password }) => {
+export const formCheck = async ({ e, username, password }) => {
   e.preventDefault()
 
-  fetch("/api/check", {
+  const res = await fetch("/api/check", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -12,20 +12,19 @@ export const formCheck = ({ e, username, password }) => {
       username,
       password,
     }),
-  }).then((res) => {
-    if (res.status === 200) {
-      alert("Login successful!")
-      localStorage.setItem(
-        "check",
-        JSON.stringify({ username: username, login: "true" }),
-      )
-      Router.push(`/${username}`)
-    } else if (res.status === 400) {
-      alert("Wrong password!")
-    } else if (res.status === 404) {
-      register({ username, password })
-    }
   })
+  if (res.status === 200) {
+    alert("Login successful!")
+    localStorage.setItem(
+      "check",
+      JSON.stringify({ username: username, login: "true" }),
+    )
+    Router.push(`/${username}`)
+  } else if (res.status === 400) {
+    return true
+  } else if (res.status === 404) {
+    register({ username, password })
+  }
 }
 export const register = ({ username, password }) => {
   fetch("/api/add", {
