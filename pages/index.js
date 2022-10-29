@@ -21,6 +21,17 @@ export default function Home() {
     }
     usernameRef.current.focus()
   }, [router])
+  const formHandle = async ({ e, username, password }) => {
+    const res = await formCheck({
+      e,
+      username,
+      password,
+    })
+    console.log(res)
+    if (res === false) {
+      setLock(true)
+    }
+  }
 
   return (
     <>
@@ -77,7 +88,7 @@ export default function Home() {
                 : "bg-red-600 text-white pointer-events-none select-none"
             }`}
             onClick={(e) =>
-              formCheck({
+              formHandle({
                 e,
                 username: username.toLocaleLowerCase(),
                 password,

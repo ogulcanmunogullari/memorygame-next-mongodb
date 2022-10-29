@@ -13,8 +13,8 @@ export default async function handler(req, res) {
       password: hashedPassword,
       score: 0,
     })
-    user.save()
     res.status(200).json()
+    user.save()
   } catch {
     res.status(400).json()
   }

@@ -19,11 +19,12 @@ export const formCheck = async ({ e, username, password }) => {
       JSON.stringify({ username: username, login: "true" }),
     )
     Router.push(`/${username}`)
-    alert(`Welcome ${username}`)
+    return false
   } else if (res.status === 400) {
     alert("Wrong Password!")
   } else if (res.status === 404) {
     register({ username, password })
+    return false
   }
 }
 export const register = async ({ username, password }) => {
@@ -43,9 +44,9 @@ export const register = async ({ username, password }) => {
         JSON.stringify({ username: username, login: "true" }),
       )
       Router.push(`/${username}`)
-      alert("Registration successful, please wait!")
     } else if (res.status === 400) {
       alert("Registration failed!")
+      location.reload()
     }
   })
 }
