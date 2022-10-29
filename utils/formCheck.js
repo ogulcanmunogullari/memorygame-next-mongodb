@@ -14,19 +14,19 @@ export const formCheck = async ({ e, username, password }) => {
     }),
   })
   if (res.status === 200) {
-    alert("Login successful!")
     localStorage.setItem(
       "check",
       JSON.stringify({ username: username, login: "true" }),
     )
     Router.push(`/${username}`)
+    alert(`Welcome ${username}`)
   } else if (res.status === 400) {
-    return true
+    alert("Wrong Password!")
   } else if (res.status === 404) {
     register({ username, password })
   }
 }
-export const register = ({ username, password }) => {
+export const register = async ({ username, password }) => {
   fetch("/api/add", {
     method: "POST",
     headers: {
@@ -35,16 +35,15 @@ export const register = ({ username, password }) => {
     body: JSON.stringify({
       name: username,
       password,
-      score: 0,
     }),
   }).then((res) => {
     if (res.status === 200) {
-      alert("Registration successful!")
       localStorage.setItem(
         "check",
         JSON.stringify({ username: username, login: "true" }),
       )
       Router.push(`/${username}`)
+      alert("Registration successful, please wait!")
     } else if (res.status === 400) {
       alert("Registration failed!")
     }

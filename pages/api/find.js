@@ -1,7 +1,7 @@
-import User from "../../models/users"
 import connectDB from "../../utils/db"
-
 connectDB()
+import User from "../../models/users"
+
 export default function handler(req, res) {
   const { username } = req.body
   User.findOne({ name: { $eq: username } }).then((result) => {

@@ -16,19 +16,11 @@ export default function Home() {
       const { username, login } = JSON.parse(check)
       if (login === "true") {
         router.push(`/${username}`)
+        setLock(true)
       }
     }
     usernameRef.current.focus()
   }, [router])
-
-  const formHandle = async ({ e, username, password }) => {
-    const check = await formCheck({ e, username, password })
-    if (check) {
-      alert("Wrong password!")
-    } else {
-      setLock(true)
-    }
-  }
 
   return (
     <>
@@ -63,7 +55,6 @@ export default function Home() {
             onChange={(e) => setUsername(e.target.value)}
             className="text-green-600 placeholder:text-green-600 p-2"
           />
-
           <label
             htmlFor="password"
             className="text-xl border-b-2 border-red-600 py-2">
@@ -85,13 +76,18 @@ export default function Home() {
                 ? "bg-green-600 text-white"
                 : "bg-red-600 text-white pointer-events-none select-none"
             }`}
-            onClick={(e) => formHandle({ e, username, password })}>
-            Register / Enter
+            onClick={(e) =>
+              formCheck({
+                e,
+                username: username.toLocaleLowerCase(),
+                password,
+              })
+            }>
+            {lock ? "Auto Login, Wait" : "Register / Enter"}
           </button>
           <h1 className="text-xs text-gray-400 mt-2 pointer-events-none select-none">
-            You can login or register with a single button, and if you do not
-            logout, your login state will be saved, which you can access at any
-            time without logging in. -- YOU CAN NOT CLICK HERE --
+            FREE SERVERS ARE SLOW, PLEASE PRESS BUTTON ONE TIME AND WAIT, IF YOU
+            LOGIN BEFORE JUST WAIT THERE IS AUTO LOGIN FEATURE...
           </h1>
         </form>
       </div>

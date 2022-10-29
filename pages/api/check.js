@@ -1,7 +1,7 @@
-import User from "../../models/users"
 import connectDB from "../../utils/db"
-import bcrypt from "bcrypt"
 connectDB()
+import User from "../../models/users"
+import bcrypt from "bcrypt"
 
 export default async function handler(req, res) {
   const { username, password } = req.body
